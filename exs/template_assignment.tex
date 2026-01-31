@@ -1,0 +1,180 @@
+% !TEX program = pdflatex
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[norsk]{babel}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+
+% Fillable PDF fields
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=false,
+  pdfborder={0 0 0},
+  pdfcreator={Prism/LaTeX},
+  pdfproducer={pdfTeX}
+}
+
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt}
+
+\newcommand{\CourseCode}{\textbf{KURS-101}}
+\newcommand{\CourseName}{\textbf{Kursnavn}}
+\newcommand{\AssignmentName}{\textbf{Digital besvarelse}}
+% Innleveringsfrist (settes av lærer)
+\newcommand{\DueDate}{\textbf{06.07.2067 kl: 13:37}}
+
+% Lærer-/dokumentmetadata (fylles ut i koden, ikke av studenten)
+\newcommand{\DocType}{\textbf{Oblig X}}
+\newcommand{\DocVariant}{\textbf{Vår 2026}}
+
+% Plattform-/generatorinfo (kan endres av lærer)
+\newcommand{\PlatformName}{Prism}
+\newcommand{\PlatformOperatorName}{OpenAI}
+% GitHub-repo for malen (settes av lærer)
+\newcommand{\TemplateRepoUrl}{https://github.com/labhstats/grading_your_assignments_tool}
+
+% Teller antall oppgaver (brukes på sluttsiden)
+\newcounter{questioncount}
+
+% Topp-/bunntekst på alle sider (unntatt titlepage/sluttside som har empty)
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\CourseCode{} -- \CourseName}
+\fancyhead[R]{\DocType{}\;|\;\DocVariant}
+\fancyfoot[L]{\AssignmentName}
+\fancyfoot[C]{Side \thepage\ av \pageref{LastPage}}
+\fancyfoot[R]{}
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+% Egen side-stil for sluttsiden (viser tydelig at det er siste side)
+\fancypagestyle{endpage}{%
+  \fancyhf{}%
+  \fancyhead[L]{\CourseCode{} -- \CourseName}%
+  \fancyhead[R]{\DocType{}\;|\;\DocVariant}%
+  \fancyfoot[L]{\AssignmentName}%
+  \fancyfoot[C]{Side \thepage\ av \pageref{LastPage}}%
+  \fancyfoot[R]{\textbf{SISTE SIDE}}%
+  \renewcommand{\headrulewidth}{0.4pt}%
+  \renewcommand{\footrulewidth}{0.4pt}%
+}
+
+% Convenience: a wide, multiline answer field
+\newcommand{\AnswerBox}[2]{%
+  % #1 = field name (must be unique), #2 = height
+  \TextField[
+    name=#1,
+    multiline=true,
+    bordercolor={0.2 0.2 0.2},
+    backgroundcolor={1 1 1},
+    width=\linewidth,
+    height=#2,
+    charsize=11pt
+  ]{}
+}
+
+\newcommand{\QuestionPage}[1]{%
+  % #1 = oppgavenummer
+  \stepcounter{questioncount}%
+  \clearpage
+  {\Large \textbf{Oppgave #1}}\\[2mm]
+  \textcolor{gray}{\rule{\linewidth}{0.4pt}}\\[2mm]
+
+  \textbf{Svar:}\\[2mm]
+  \AnswerBox{answer#1}{210mm}
+}
+
+\newcommand{\EndPage}{%
+  \clearpage
+  \thispagestyle{endpage}
+  \vspace*{20mm}
+  {\LARGE \textbf{Slutten på dokumentet}}\\[8mm]
+
+  \textbf{Antall oppgaver i dokumentet:} \arabic{questioncount}\\[10mm]
+
+  \textbf{Viktig:}\\[2mm]
+  \begin{minipage}{\linewidth}
+  Ikke inkluder i besvarelsene personsensitiv informasjon (f.eks. fødselsnummer, helseopplysninger, private adresser, passord, eller andre opplysninger som kan identifisere deg eller andre).
+  Besvarelsen kan bli vurdert helt eller delvis ved hjelp av automatiske metoder, inkludert store og små språkmodeller (LLM/SLM).\\[2mm]
+  Åpenbare forsøk på \textit{prompt injection} (dvs. at du skriver instrukser i besvarelsen for å få et automatisk vurderingssystem til å ignorere oppgaven, endre regler, eller gi deg bedre vurdering) vil bli regnet som et forsøk på juks.\\[6mm]
+  \textcolor{gray}{\small Merk: Dette dokumentet er generert i \PlatformName{} (driftes av \PlatformOperatorName{}). Mindre endringer kan være gjort av ansvarlig lærer.}\\[2mm]
+  {\color{gray}\small Mal og tilhørende kildekode er tilgjengelig på: \url{\TemplateRepoUrl}}\\
+  \end{minipage}
+
+  % (Tellingen øker automatisk for hver \string\QuestionPage\ du bruker.)
+  % (Unngå også å inkludere instruksjoner i fritekst som forsøker å manipulere vurderingssystemet.)
+}
+
+\begin{document}
+
+% --------------------
+% Title page
+% --------------------
+\begin{titlepage}
+\centering
+\vspace*{10mm}
+
+{\LARGE \AssignmentName\par}
+\vspace{6mm}
+
+{\Large \CourseCode{} -- \CourseName\par}
+\vspace{2mm}
+\begin{tabular*}{0.9\linewidth}{@{\extracolsep{\fill}}l c r@{}}
+\DocType & \textbf{Frist:} \DueDate & \DocVariant\\
+\end{tabular*}
+\vspace{8mm}
+
+\textcolor{gray}{\rule{0.85\linewidth}{0.6pt}}\par
+\vspace{8mm}
+
+\begin{Form}
+\begin{tabular}{@{}p{0.30\linewidth}@{\hspace{3mm}}p{0.67\linewidth}@{}}
+Navn: & \TextField[name=studentName,width=\linewidth,charsize=11pt]{}\\[4mm]
+Studentnummer: & \TextField[name=studentId,width=\linewidth,charsize=11pt]{}\\[4mm]
+(Student) E-post : & \TextField[name=studentEmail,width=\linewidth,charsize=11pt]{}\\[4mm]
+Innleveringsdato: & \TextField[name=submissionDate,width=\linewidth,charsize=11pt]{}\\
+\end{tabular}
+\end{Form}
+
+\vfill
+\begin{flushleft}
+{\color{gray}\small
+Denne PDF-en inneholder utfyllbare felter (skjema/AcroForm). Studentene kan skrive direkte i dokumentet i en PDF-leser som støtter dette, f.eks. Adobe Acrobat Reader, Foxit Reader eller PDF-XChange Editor.
+
+Merk: Noen innebygde PDF-visninger i nettlesere (f.eks. Chrome/Edge/Safari) kan ha begrenset støtte for utfylling og lagring av skjema.
+
+Enkel feilsøking:
+\begin{itemize}
+  \item Last ned PDF-en lokalt og åpne den i en egen PDF-leser (ikke i nettleser).
+  \item Skriv gjerne svarene først i et annet program (f.eks. Word/Google Docs/Notepad) og kopier dem inn her til slutt, så har du alltid en sikkerhetskopi.
+  \item Klikk i svarfeltene og lim inn; lagre deretter en kopi (\textit{Lagre som}).
+  \item Hvis feltene ikke kan fylles ut: oppdater/bytt PDF-leser, eller åpne på nytt og prøv igjen.
+\end{itemize}
+}\par
+\end{flushleft}
+\vspace*{8mm}
+\end{titlepage}
+
+% --------------------
+% Answer pages (1 page per question)
+% --------------------
+% Denne filen skal kun inneholde besvarelsessider (uten oppgavetekst).
+% Oppgavetekst legges i questions.tex (egen PDF).
+\begin{Form}
+\QuestionPage{1}
+\QuestionPage{2}
+\QuestionPage{3}
+\QuestionPage{4}
+\QuestionPage{5}
+\end{Form}
+
+\EndPage
+
+\end{document}
